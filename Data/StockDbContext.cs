@@ -21,6 +21,7 @@ public class StockDbContext : DbContext
         modelBuilder.Entity<Product>(entity =>
         {
             entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
             entity.Property(e => e.Price).HasPrecision(18, 2);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("datetime('now')");
@@ -29,6 +30,7 @@ public class StockDbContext : DbContext
         modelBuilder.Entity<Customer>(entity =>
         {
             entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("datetime('now')");
@@ -37,6 +39,7 @@ public class StockDbContext : DbContext
         modelBuilder.Entity<Order>(entity =>
         {
             entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.OrderDate).HasDefaultValueSql("datetime('now')");
         });
     }
