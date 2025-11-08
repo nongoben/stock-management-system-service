@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using StockManagementSystem.Data;
-using StockManagementSystem.Endpoints;
 using StockManagementSystem.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +24,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<StockDbContext>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 var app = builder.Build();
 
@@ -36,9 +37,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-// Map product endpoints
-app.MapProductEndpoints();
 
 app.MapControllers();
 
