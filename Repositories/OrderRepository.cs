@@ -57,9 +57,11 @@ namespace StockManagementSystem.Repositories
                     return new mResult<bool>(false, "Insufficient stock quantity", false);
                 }
 
+                stockItem.UpdatedAt = DateTime.Now;
                 stockItem.Quantity -= order.Quantity;
                 _context.Products.Update(stockItem);
 
+                order.OrderDate = DateTime.Now;
                 await _context.Orders.AddAsync(order);
                 await _context.SaveChangesAsync();
                 return new mResult<bool>(true, "Order added successfully", true);

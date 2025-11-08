@@ -46,6 +46,8 @@ namespace StockManagementSystem.Repositories
         {
             try
             {
+                product.CreatedAt = DateTime.Now;
+                product.UpdatedAt = DateTime.Now;
                 await _context.Products.AddAsync(product);
                 await _context.SaveChangesAsync();
                 return new mResult<bool>(true, "Product added successfully", true);
@@ -60,6 +62,7 @@ namespace StockManagementSystem.Repositories
         {
             try
             {
+                product.UpdatedAt = DateTime.Now;
                 _context.Products.Update(product);
                 await _context.SaveChangesAsync();
                 return new mResult<bool>(true, "Product updated successfully", true);
