@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using StockManagementSystem.Data;
+using StockManagementSystem.DTOs;
 using StockManagementSystem.Models;
 
 namespace StockManagementSystem.Repositories
@@ -14,11 +15,12 @@ namespace StockManagementSystem.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+        public async Task<mResult<IEnumerable<Product>>> GetAllProductsAsync()
         {
             try
             {
-                return await _context.Products.ToListAsync();
+                var products = await _context.Products.ToListAsync();
+                return new mResult<IEnumerable<Product>>(true, "Products retrieved successfully", products);
             }
             catch (Exception ex)
             {
@@ -26,11 +28,12 @@ namespace StockManagementSystem.Repositories
             }
         }
 
-        public async Task<Product?> GetProductByIdAsync(int id)
+        public async Task<mResult<Product?>> GetProductByIdAsync(int id)
         {
             try
             {
-                return await _context.Products.FindAsync(id);
+                var product = await _context.Products.FindAsync(id);
+                return new mResult<Product?>(true, "Product retrieved successfully", product);
             }
             catch (Exception ex)
             {
@@ -39,52 +42,35 @@ namespace StockManagementSystem.Repositories
             }
         }
 
-        public async Task AddProductAsync(Product product)
+        public async Task<mResult<bool>> AddProductAsync(Product product)
         {
             try
             {
                 await _context.Products.AddAsync(product);
                 await _context.SaveChangesAsync();
+                return new mResult<bool>(true, "Product added successfully", true);
             }
             catch (Exception ex)
             {
-                // Log the exception (not implemented here)
                 throw new Exception("Error adding product", ex);
             }
         }
 
-        public async Task UpdateProductAsync(Product product)
+        public async Task<mResult<bool>> UpdateProductAsync(Product product)
         {
             try
             {
                 _context.Products.Update(product);
                 await _context.SaveChangesAsync();
+                return new mResult<bool>(true, "Product updated successfully", true);
             }
             catch (Exception ex)
             {
-                // Log the exception (not implemented here)
-                throw new Exception("Error updating product", ex);
-            }
-        }
-        public async Task UpdateProductPartialAsync(int id, Action<Product> updateAction)
-        {
-            try
-            {
-                var product = await _context.Products.FindAsync(id);
-                if (product != null)
-                {
-                    updateAction(product);
-                    await _context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log the exception (not implemented here)
                 throw new Exception("Error updating product", ex);
             }
         }
 
-        public async Task DeleteProductAsync(int id)
+        public async Task<mResult<bool>> DeleteProductAsync(int id)
         {
             try
             {
@@ -93,11 +79,13 @@ namespace StockManagementSystem.Repositories
                 {
                     _context.Products.Remove(product);
                     await _context.SaveChangesAsync();
+                    return new mResult<bool>(true, "Product deleted successfully", true);
                 }
+
+                return new mResult<bool>(false, "Product not found", false);
             }
             catch (Exception ex)
             {
-                // Log the exception (not implemented here)
                 throw new Exception("Error deleting product", ex);
             }
         }

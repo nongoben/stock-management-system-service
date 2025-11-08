@@ -1,12 +1,13 @@
+using StockManagementSystem.DTOs;
 using StockManagementSystem.Models;
 namespace StockManagementSystem.Repositories
 {
     public interface IProductRepository
     {
-        Task<IEnumerable<Product>> GetAllProductsAsync();
-        Task<Product?> GetProductByIdAsync(int id);
-        Task AddProductAsync(Product product);
-        Task UpdateProductAsync(Product product);
-        Task DeleteProductAsync(int id);
+        Task<mResult<IEnumerable<Product>>> GetAllProductsAsync();
+        Task<mResult<Product?>> GetProductByIdAsync(int id);
+        Task<mResult<bool>> AddProductAsync(Product product);
+        Task<mResult<bool>> UpdateProductAsync(Product product);
+        Task<mResult<bool>> DeleteProductAsync(int id);
     }
 }
