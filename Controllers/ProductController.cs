@@ -5,7 +5,7 @@ using System.Data;
 using StockManagementSystem.Repositories;
 using StockManagementSystem.Models;
 
-namespace training_api.Controllers;
+namespace StockManagementSystem.Controllers;
 
 [ApiController]
 [Route("api/[controller]/[action]")]

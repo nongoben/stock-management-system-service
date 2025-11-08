@@ -46,6 +46,20 @@ namespace StockManagementSystem.Repositories
         {
             try
             {
+                var stockItem = await _context.Products.FindAsync(order.ProductId);
+                if (stockItem == null)
+                {
+                    return new mResult<bool>(false, "Product not found", false);
+                }
+
+                if (stockItem.Quantity < order.Quantity)
+                {
+                    return new mResult<bool>(false, "Insufficient stock quantity", false);
+                }
+
+                stockItem.Quantity -= order.Quantity;
+                _context.Products.Update(stockItem);
+
                 await _context.Orders.AddAsync(order);
                 await _context.SaveChangesAsync();
                 return new mResult<bool>(true, "Order added successfully", true);

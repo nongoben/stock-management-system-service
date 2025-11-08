@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using StockManagementSystem.Repositories;
 
-namespace training_api.Controllers;
+namespace StockManagementSystem.Controllers;
 
 [ApiController]
 [Route("api/[controller]/[action]")]

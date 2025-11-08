@@ -11,7 +11,7 @@ using StockManagementSystem.Data;
 namespace StockManagementSystem.Migrations
 {
     [DbContext(typeof(StockDbContext))]
-    [Migration("20251108154308_InitialCreate")]
+    [Migration("20251108162811_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -56,6 +56,9 @@ namespace StockManagementSystem.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("OrderDate")
                         .ValueGeneratedOnAdd()
