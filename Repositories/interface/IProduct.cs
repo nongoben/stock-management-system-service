@@ -9,5 +9,6 @@ namespace StockManagementSystem.Repositories
         Task<mResult<bool>> AddProductAsync(Product product);
         Task<mResult<bool>> UpdateProductAsync(Product product);
         Task<mResult<bool>> DeleteProductAsync(int id);
+        Task<mResult<IEnumerable<mCodeDesc>>> GetProductCodesAndDescriptionsAsync();
     }
 }

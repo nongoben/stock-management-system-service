@@ -89,5 +89,21 @@ namespace StockManagementSystem.Repositories
                 throw new Exception("Error deleting product", ex);
             }
         }
+
+        public async Task<mResult<IEnumerable<mCodeDesc>>> GetProductCodesAndDescriptionsAsync()
+        {
+            try
+            {
+                var codeDescs = await _context.Products
+                    .Select(p => new mCodeDesc(p.Id.ToString(), p.Name))
+                    .ToListAsync();
+
+                return new mResult<IEnumerable<mCodeDesc>>(true, "Product codes and descriptions retrieved successfully", codeDescs);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving product codes and descriptions", ex);
+            }
+        }
     }
 }
