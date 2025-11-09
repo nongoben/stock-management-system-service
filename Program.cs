@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using StockManagementSystem.Data;
 using StockManagementSystem.Repositories;
 
@@ -36,15 +37,21 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseDefaultFiles();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/dist")),
+    RequestPath = ""
+});
+
 app.UseHttpsRedirection();
 
 app.MapControllers();
 
 app.UseCors();
 
-app.Run();
+app.MapFallbackToFile("index.html");
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+app.Run();
