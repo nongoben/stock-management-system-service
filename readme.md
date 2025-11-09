@@ -2,7 +2,7 @@
 2. run => dotnet ef database update
 
 3. run => docker build -t stock-management-system-service .
-4. run => docker run -d -p 5179:5179 -v D:/db_stock:/app/data stick-management-system-service
+4. run => docker run -d -p 5179:5179 -v D:/db_stock:/app/data --restart always stick-management-system-service
 
 หมายเหตุ: mount ทั้ง folder แทนที่จะ mount แค่ไฟล์เดียว
 
