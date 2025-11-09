@@ -9,5 +9,5 @@
 # Push to Docker Hub
 
 5. run => docker login
-6. run => docker tag stock-management-system-service nongoben331/stock-system:latest
-7. run => docker push nongoben331/stock-system:latest
+6. run => docker tag stock-management-system-service nongoben331/stock-system:stock-service
+7. run => docker push nongoben331/stock-system:stock-service
