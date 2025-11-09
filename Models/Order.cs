@@ -8,5 +8,6 @@ namespace StockManagementSystem.Models
         public int Quantity { get; set; }
         public decimal TotalPrice { get; set; }
         public DateTime OrderDate { get; set; }
+        public Product? Product { get; set; }
     }
 }

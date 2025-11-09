@@ -19,7 +19,10 @@ namespace StockManagementSystem.Repositories
         {
             try
             {
-                var orders = await _context.Orders.ToListAsync();
+                // query join table product not linq
+                var orders = await _context.Orders
+                    .Include(o => o.Product)
+                    .ToListAsync();
                 return new mResult<IEnumerable<Order>>(true, "Orders retrieved successfully", orders);
             }
             catch (Exception ex)
@@ -59,6 +62,7 @@ namespace StockManagementSystem.Repositories
 
                 stockItem.UpdatedAt = DateTime.Now;
                 stockItem.Quantity -= order.Quantity;
+                stockItem.SoldQuantity += order.Quantity;
                 _context.Products.Update(stockItem);
 
                 order.OrderDate = DateTime.Now;

@@ -98,7 +98,7 @@ namespace StockManagementSystem.Repositories
             try
             {
                 var codeDescs = await _context.Products
-                    .Select(p => new mCodeDesc(p.Id.ToString(), p.Name))
+                    .Select(p => new mCodeDesc(p.Id.ToString(), p.ProductCode + " - " + p.Name))
                     .ToListAsync();
 
                 return new mResult<IEnumerable<mCodeDesc>>(true, "Product codes and descriptions retrieved successfully", codeDescs);
