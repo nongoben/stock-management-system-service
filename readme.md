@@ -11,3 +11,7 @@
 5. run => docker login
 6. run => docker tag stock-management-system-service nongoben331/stock-system:stock-service
 7. run => docker push nongoben331/stock-system:stock-service
+
+# Publish
+
+dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true -o publish/
