@@ -19,9 +19,9 @@ public class OrderController : ControllerBase
 	}
 
 	[HttpGet]
-	public async Task<IActionResult> GetAllOrders()
+	public async Task<IActionResult> GetAllOrders(string? product, string? customer, string? salesPerson, DateTime? fromDate, DateTime? toDate)
 	{
-		var orders = await _orderRepository.GetAllOrdersAsync();
+		var orders = await _orderRepository.GetAllOrdersAsync(product, customer, salesPerson, fromDate, toDate);
 		return Ok(orders);
 	}
 

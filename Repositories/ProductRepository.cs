@@ -15,11 +15,28 @@ namespace StockManagementSystem.Repositories
             _context = context;
         }
 
-        public async Task<mResult<IEnumerable<Product>>> GetAllProductsAsync()
+        public async Task<mResult<IEnumerable<Product>>> GetAllProductsAsync(string? product, DateTime? fromDate, DateTime? toDate)
         {
             try
             {
-                var products = await _context.Products.ToListAsync();
+                var productsQuery = _context.Products.AsQueryable();
+
+                if (!string.IsNullOrEmpty(product))
+                {
+                    productsQuery = productsQuery.Where(p => p.Id.ToString() == product);
+                }
+
+                if (fromDate.HasValue)
+                {
+                    productsQuery = productsQuery.Where(p => p.CreatedAt >= fromDate.Value);
+                }
+
+                if (toDate.HasValue)
+                {
+                    productsQuery = productsQuery.Where(p => p.CreatedAt <= toDate.Value);
+                }
+
+                var products = await productsQuery.ToListAsync();
                 return new mResult<IEnumerable<Product>>(true, "Products retrieved successfully", products);
             }
             catch (Exception ex)

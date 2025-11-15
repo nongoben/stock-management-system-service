@@ -15,14 +15,32 @@ namespace StockManagementSystem.Repositories
             _context = context;
         }
 
-        public async Task<mResult<IEnumerable<Order>>> GetAllOrdersAsync()
+        public async Task<mResult<IEnumerable<Order>>> GetAllOrdersAsync(string? product, string? customer, string? salesPerson, DateTime? fromDate, DateTime? toDate)
         {
             try
             {
-                // query join table product not linq
-                var orders = await _context.Orders
-                    .Include(o => o.Product)
-                    .ToListAsync();
+                var query = _context.Orders.Include(o => o.Product).AsQueryable();
+                if (!string.IsNullOrEmpty(product))
+                {
+                    query = query.Where(o => o.ProductId.ToString().Contains(product));
+                }
+                if (!string.IsNullOrEmpty(customer))
+                {
+                    query = query.Where(o => o.CustomerName.Contains(customer));
+                }
+                if (!string.IsNullOrEmpty(salesPerson))
+                {
+                    query = query.Where(o => o.SalesPerson.Contains(salesPerson));
+                }
+                if (fromDate.HasValue)
+                {
+                    query = query.Where(o => o.OrderDate >= fromDate.Value);
+                }
+                if (toDate.HasValue)
+                {
+                    query = query.Where(o => o.OrderDate <= toDate.Value);
+                }
+                var orders = await query.ToListAsync();
                 return new mResult<IEnumerable<Order>>(true, "Orders retrieved successfully", orders);
             }
             catch (Exception ex)
@@ -107,6 +125,44 @@ namespace StockManagementSystem.Repositories
             catch (Exception ex)
             {
                 throw new Exception("Error deleting order", ex);
+            }
+        }
+
+        public Task<mResult<IEnumerable<mCodeDesc>>> GetSalesPersonsAsync()
+        {
+            try
+            {
+                var salesPersons = _context.Orders
+                    .Select(o => o.SalesPerson)
+                    .Distinct()
+                    .Where(sp => sp != null)
+                    .Select(sp => new mCodeDesc(sp!, sp!))
+                    .ToList();
+
+                return Task.FromResult(new mResult<IEnumerable<mCodeDesc>>(true, "Sales persons retrieved successfully", salesPersons));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving sales persons", ex);
+            }
+        }
+
+        public Task<mResult<IEnumerable<mCodeDesc>>> GetCustomersAsync()
+        {
+            try
+            {
+                var customers = _context.Orders
+                    .Select(o => o.CustomerName)
+                    .Distinct()
+                    .Where(c => c != null)
+                    .Select(c => new mCodeDesc(c!, c!))
+                    .ToList();
+
+                return Task.FromResult(new mResult<IEnumerable<mCodeDesc>>(true, "Customers retrieved successfully", customers));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving customers", ex);
             }
         }
     }
