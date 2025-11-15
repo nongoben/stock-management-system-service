@@ -11,4 +11,12 @@ namespace StockManagementSystem.Models
         public DateTime OrderDate { get; set; }
         public Product? Product { get; set; }
     }
+
+    public class SalesRanking
+    {
+        public string? SalesPerson { get; set; }
+        public decimal TotalSales { get; set; }
+        public int TotalOrders { get; set; }
+        public int Rank { get; set; }
+    }
 }

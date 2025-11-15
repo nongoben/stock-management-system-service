@@ -165,5 +165,52 @@ namespace StockManagementSystem.Repositories
                 throw new Exception("Error retrieving customers", ex);
             }
         }
+
+        public async Task<mResult<IEnumerable<SalesRanking>>> GetAllOrdersSalesRankingAsync(string? product, string? customer, string? salesPerson, DateTime? fromDate, DateTime? toDate)
+        {
+            try
+            {
+                var query = _context.Orders.Include(o => o.Product).AsQueryable();
+                if (!string.IsNullOrEmpty(product))
+                {
+                    query = query.Where(o => o.ProductId.ToString().Contains(product));
+                }
+                if (!string.IsNullOrEmpty(customer))
+                {
+                    query = query.Where(o => o.CustomerName.Contains(customer));
+                }
+                if (!string.IsNullOrEmpty(salesPerson))
+                {
+                    query = query.Where(o => o.SalesPerson.Contains(salesPerson));
+                }
+                if (fromDate.HasValue)
+                {
+                    query = query.Where(o => o.OrderDate >= fromDate.Value);
+                }
+                if (toDate.HasValue)
+                {
+                    query = query.Where(o => o.OrderDate <= toDate.Value);
+                }
+                var orders = await query.ToListAsync();
+
+                var salesRanking = orders
+                    .GroupBy(o => o.SalesPerson)
+                    .Select(g => new SalesRanking
+                    {
+                        SalesPerson = g.Key,
+                        TotalSales = g.Sum(o => o.TotalPrice),
+                        TotalOrders = g.Count()
+                    })
+                    .OrderByDescending(sr => sr.TotalSales)
+                    .Select((sr, index) => { sr.Rank = index + 1; return sr; })
+                    .ToList();
+
+                return new mResult<IEnumerable<SalesRanking>>(true, "Sales ranking retrieved successfully", salesRanking);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving orders", ex);
+            }
+        }
     }
 }

@@ -25,6 +25,13 @@ public class OrderController : ControllerBase
 		return Ok(orders);
 	}
 
+	[HttpGet]
+	public async Task<IActionResult> GetAllOrdersSalesRanking(string? product, string? customer, string? salesPerson, DateTime? fromDate, DateTime? toDate)
+	{
+		var orders = await _orderRepository.GetAllOrdersSalesRankingAsync(product, customer, salesPerson, fromDate, toDate);
+		return Ok(orders);
+	}
+
 	[HttpGet("{id}")]
 	public async Task<IActionResult> GetOrderById(int id)
 	{
