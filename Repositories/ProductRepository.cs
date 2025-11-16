@@ -36,6 +36,8 @@ namespace StockManagementSystem.Repositories
                     productsQuery = productsQuery.Where(p => p.CreatedAt <= toDate.Value);
                 }
 
+                productsQuery = productsQuery.Where(p => p.Status != "D");
+
                 var products = await productsQuery.ToListAsync();
                 return new mResult<IEnumerable<Product>>(true, "Products retrieved successfully", products);
             }
@@ -65,6 +67,7 @@ namespace StockManagementSystem.Repositories
             {
                 product.CreatedAt = DateTime.Now;
                 product.UpdatedAt = DateTime.Now;
+                product.Status = "A";
                 await _context.Products.AddAsync(product);
                 await _context.SaveChangesAsync();
                 return new mResult<bool>(true, "Product added successfully", true);
@@ -97,7 +100,8 @@ namespace StockManagementSystem.Repositories
                 var product = await _context.Products.FindAsync(id);
                 if (product != null)
                 {
-                    _context.Products.Remove(product);
+                    product.Status = "D";
+                    _context.Products.Update(product);
                     await _context.SaveChangesAsync();
                     return new mResult<bool>(true, "Product deleted successfully", true);
                 }
