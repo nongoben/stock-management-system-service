@@ -113,6 +113,16 @@ namespace StockManagementSystem.Repositories
             try
             {
                 var order = await _context.Orders.FindAsync(id);
+                var stockItem = await _context.Products.FindAsync(order.ProductId);
+
+                if (stockItem != null)
+                {
+                    stockItem.UpdatedAt = DateTime.Now;
+                    stockItem.Quantity += order.Quantity;
+                    stockItem.SoldQuantity -= order.Quantity;
+                    _context.Products.Update(stockItem);
+                }
+
                 if (order != null)
                 {
                     _context.Orders.Remove(order);
